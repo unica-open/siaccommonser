@@ -1,0 +1,74 @@
+------------------------
+SIAC CommonLIB
+------------------------
+
+Funzionalità rilasciate
+--------------------------
+
+build 27/11/2019 versione 4.8.0
+ SIAC-6881
+ SIAC-7083
+
+build 15/11/2019 versione 4.7.1
+ SIAC-6881
+
+build 07/10/2019 versione 4.7.0
+ correzione EOL
+
+build 29/05/2019 versione 4.6.0
+ SIAC-6255
+ SIAC-6822
+
+build 06/03/2019 versione 4.5.0
+ SIAC-6587
+
+build 13/02/2019 versione 4.4.0
+ SIAC-6257
+
+build 23/01/2019 versione 4.3.0
+ refactor common + cor + cru 
+
+build 31/10/2018 versione 4.1.0
+ SIAC-6347
+
+build 25/10/2018 versione 4.0.0
+ incremento versione per modifiche architettura
+
+build 01/02/2018 versione 3.10.0
+ SIAC-5333
+
+build 11/01/2018 versione 3.9.0
+ SIAC-5737
+ SIAC-5761
+
+build 28/12/2017 versione 3.8.0
+ SIAC-5336
+
+build 21/12/2017 versione 3.7.0
+ SIAC-5480
+
+build 14/12/2017 versione 3.6.0
+ SIAC-5504
+
+build 30/11/2017 versione 3.5.0
+ SIAC-5596 (versione non incrementata in quanto consegnata come patch)
+
+build 16/11/2017 versione 3.5.0
+ SIAC-5501
+
+build 09/11/2017 versione 3.4.0
+ SIAC-5386
+ SIAC-5393
+ SIAC-5489
+
+build 26/10/2017 versione 3.3.0
+ SIAC-5365
+#### SIOPE+ INIZIO ####
+ SIAC-5440
+##### SIOPE+ FINE #####
+
+build 05/10/2017 versione 3.2.0
+ SIAC-5301
+
+build 31/08/2017 versione 3.1.0
+ SIAC-5022

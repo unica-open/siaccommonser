@@ -1,0 +1,10 @@
+name*,version*,license*,vendor/community,end-of-support,dependencies,language
+commons-lang3,3.1,Apache 2.0,,,,java
+dozer,5.3.2,Apache 2.0,,,,java
+hibernate-jpa-2.0-api,1.0.1.Final-redhat-1,EPL 1.0,,,,java
+jboss-servlet-api_3.0_spec,1.0.1.Final-redhat-1,CDDL+GPL 2.0,,,,java
+spring-beans,3.1.1.RELEASE,Apache 2.0,,,,java
+spring-context,3.1.1.RELEASE,Apache 2.0,,,,java
+spring-core,3.1.1.RELEASE,Apache 2.0,,,,java
+spring-data-commons-core,1.4.0.RELEASE,Apache 2.0,,,,java
+spring-tx,3.1.1.RELEASE,Apache 2.0,,,,java

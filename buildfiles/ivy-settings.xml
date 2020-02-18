@@ -1,0 +1,24 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<ivy-settings>
+	
+	<property name="repo.host" value="repart.csi.it" override="false"/>
+    <property name="repo.realm" value="Artifactory Realm" override="false"/>
+    <property name="repo.user" value="pippo"  override="false"/>
+    <property name="repo.pass" value="pippo"  override="false"/>          
+
+    <credentials host="${repo.host}" realm="${repo.realm}" username="${repo.user}" passwd="${repo.pass}"/>
+	
+	<settings defaultCache="${basedir}/build/cache"
+		defaultResolver="myUrlResolver" />
+	<resolvers>
+		<url name="myUrlResolver">
+			<artifact
+				pattern="http://repart.csi.it/java//[organisation]/[module]/[revision]/lib/[artifact].[type]" />
+			<ivy
+				pattern="http://repart.csi.it/java//[organisation]/[module]/[revision]/ivy-[module].xml" />
+		</url>
+	</resolvers>
+</ivy-settings>

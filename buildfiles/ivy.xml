@@ -1,0 +1,39 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<ivy-module version="2.0">
+  <info organisation="csipiemonte" module="archtest"/>
+  <configurations>
+      <conf name="runtime"  description="required for execution"/>
+      <conf name="provided" description="the JDK or a container are expected to provide the dependency at runtime"/>
+      <conf name="compile"  description="required for compilation of the application classes" extends="runtime, provided"/>
+      <conf name="test"     description="required for junit testing"/>
+      <conf name="src"      description="dependencies sources"/>
+      <conf name="dev"      description="required for source generation"/>
+  </configurations>
+
+  <dependencies>
+
+    <dependency org="apache" name="commons-lang3"            rev="3.1"           transitive="false" conf="provided->default"/>
+    <dependency org="others" name="dozer"                    rev="5.3.2"         transitive="false" conf="provided->default"/>
+    <dependency org="others" name="spring-data-commons-core" rev="1.4.0.RELEASE" transitive="false" conf="provided->default"/>
+    
+    <dependency org="csipiemonte" name="siac-common" rev="4.10.0" changing="true" transitive="false" conf="provided->default"/>
+    <dependency org="csipiemonte" name="siac-coritf" rev="4.8.0" changing="true" transitive="false" conf="provided->default"/>
+
+    <dependency org="others" name="spring" rev="3.1.1.RELEASE" transitive="false" conf="provided->default">
+      <artifact name="spring-beans-3.1.1.RELEASE"   type="jar"/>
+      <artifact name="spring-context-3.1.1.RELEASE" type="jar"/>
+      <artifact name="spring-core-3.1.1.RELEASE"    type="jar"/>
+      <artifact name="spring-tx-3.1.1.RELEASE"      type="jar"/>
+    </dependency>
+ 
+
+    <dependency org="others" name="jboss" rev="eap-6.0" transitive="false" conf="provided->default">
+      <artifact name="hibernate-jpa-2.0-api-1.0.1.Final-redhat-1"      type="jar"/>
+      <artifact name="jboss-servlet-api_3.0_spec-1.0.1.Final-redhat-1" type="jar"/>
+    </dependency>
+
+  </dependencies>
+</ivy-module>
