@@ -63,6 +63,16 @@ public abstract class SiacTBase implements Serializable {
 		super();
 	}
 	
+	public SiacTBase(SiacTBase siacTBase) {
+		this();	
+		setUid(siacTBase.getUid());
+		this.dataInizioValidita = siacTBase.dataInizioValidita;
+		this.dataFineValidita = siacTBase.dataFineValidita;
+		this.dataCreazione = siacTBase.dataCreazione;
+		this.dataModifica = siacTBase.dataModifica;
+		this.dataCancellazione = siacTBase.dataCancellazione;
+		this.loginOperazione = siacTBase.loginOperazione;
+	}
 
 	/**
 	 * Gets the uid.
@@ -359,15 +369,13 @@ public abstract class SiacTBase implements Serializable {
 
 	public boolean isEntitaCancellata()
 	{
-		if (dataCancellazione == null)
-			return false;
-		
-		return new Date().after(dataCancellazione);
+		return dataCancellazione != null && DateUtil.beforeNow(dataCancellazione);
 	}
 	
 	public boolean isEntitaConDataValida()
 	{
-		return DateUtil.nowBetween(dataInizioValidita, dataFineValidita);
+		return !DateUtil.afterNow(dataInizioValidita) && (dataFineValidita == null || DateUtil.afterNow(dataFineValidita));
 	}
+	
 
 }

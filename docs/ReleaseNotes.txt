@@ -4,6 +4,15 @@ SIAC CommonLIB
 
 Funzionalità rilasciate
 --------------------------
+build 30/04/2020 versione 4.11.0
+ open source
+
+build 28/01/2020 versione 4.10.0
+ allineamento svn
+
+
+build 18/12/2019 versione 4.9.0
+ componente scorporata da commonlib
 
 build 27/11/2019 versione 4.8.0
  SIAC-6881

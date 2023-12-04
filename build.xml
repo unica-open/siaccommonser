@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
 SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
 SPDX-License-Identifier: EUPL-1.2
@@ -245,10 +246,18 @@ SPDX-License-Identifier: EUPL-1.2
 			basedir="${classes}"
 			manifest="${jar-manifest-dir}/MANIFEST.MF"/>
 
+		<condition property="copy.jar.to.local">
+			<equals arg1="${copy.jar.to.local}" arg2="yes" />
+		</condition>
+		<antcall target="copy_jar_to_local" />
+		
+	</target>
+		
+	<target name="copy_jar_to_local" if="copy.jar.to.local">
 		<echo message="copia del jar dell'itf nel repository locale di ivy"/>
 		<copy todir="${ivy.local}" file="${archives-target}/${web-module-name}-${product-version}.jar" overwrite="true" verbose="true"></copy>
 		<move file="${ivy.local}/${web-module-name}-${product-version}.jar" tofile="${ivy.local}/${web-module-name}.jar" overwrite="true" verbose="true"></move>
-	</target>
+    </target>
 
 	<!-- -->
 	<!-- ############################################################# -->

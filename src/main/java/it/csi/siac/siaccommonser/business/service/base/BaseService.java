@@ -14,10 +14,10 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import it.csi.siac.siaccommon.util.log.LogUtil;
 import it.csi.siac.siaccommonser.business.service.base.exception.BusinessException;
 import it.csi.siac.siaccommonser.business.service.base.exception.ExecuteExternalServiceException;
 import it.csi.siac.siaccommonser.business.service.base.exception.ServiceParamError;
+import it.csi.siac.siaccommonser.util.log.LogSrvUtil;
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.Esito;
 import it.csi.siac.siaccorser.model.ServiceRequest;
@@ -42,7 +42,7 @@ public abstract class BaseService<REQ extends ServiceRequest,RES extends Service
 	
 	
 	//protected Logger  log = Logger.getLogger(this.getClass());
-	protected LogUtil log = new LogUtil(this.getClass());
+	protected LogSrvUtil log = new LogSrvUtil(this.getClass());
 	
 	/**
 	 * Parametri di input del servizio
@@ -62,7 +62,8 @@ public abstract class BaseService<REQ extends ServiceRequest,RES extends Service
 	 * @param serviceRequest
 	 * @return
 	 */
-	public RES executeService(REQ serviceRequest){
+	public RES executeService(REQ serviceRequest) {
+		log.initializeUserSessionInfo(serviceRequest.getUserSessionInfo());
 		this.req = serviceRequest;
 		executeService();
 		return res;
@@ -80,7 +81,8 @@ public abstract class BaseService<REQ extends ServiceRequest,RES extends Service
 	public void executeService() {
 		final String methodName = "executeService";
 				
-		log.debug(methodName, "Start.");
+		log.infoStart(methodName);
+
 		logServiceRequest();
 		
 		res = instantiateNewRes();
@@ -92,14 +94,20 @@ public abstract class BaseService<REQ extends ServiceRequest,RES extends Service
 			execute();
 			
 		} catch (ServiceParamError e) {
-			log.info(methodName, "Check parametri del servizio terminato con errori.");
+			String logMessage = "Check parametri del servizio terminato con errori.";
+
 			if(e.getErrore()!=null){
 				res.addErrore(e.getErrore());
+				logMessage += (" - " + e.getErrore().getTesto());
 			}
+
+			log.warn(methodName, logMessage);
+
 			res.setEsito(Esito.FALLIMENTO);
 			setRollbackOnly();
 		} catch (BusinessException e) {
-			log.info(methodName, "Errore di business nell'esecuzione del Servizio.");
+			//SIAC-7945 log.info -> log.error
+			log.error(methodName, "Errore di business nell'esecuzione del Servizio.", e);
 			if(log.isTraceEnabled()) {
 //				log.trace(methodName, "Stack trace: " + ExceptionUtils.getStackTrace(e));
 			}
@@ -128,7 +136,7 @@ public abstract class BaseService<REQ extends ServiceRequest,RES extends Service
 			setRollbackOnly();
 		} finally {
 			logServiceResponse();		
-			log.debug(methodName, "End. result: "+ res.getEsito());
+			log.debugEnd(methodName, "Esito response: " + res.getEsito());
 		}
 				
 		

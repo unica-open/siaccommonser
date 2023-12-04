@@ -7,6 +7,7 @@ package it.csi.siac.siaccommonser.integration.dao.base;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -56,15 +57,15 @@ public class JpaDao<E, PK> implements Dao<E, PK> {
 	public void save(E entity) {
 		final String methodName = "[save] - ";
 		try {
-			log.info(methodName, "inizio");
+			log.trace(methodName, "inizio");
 			//entity.setUid(null) quando E estendera' SiacTBase
 			entityManager.persist(entity);
-			log.info(methodName, "save successful");
+			log.trace(methodName, "save successful");
 		} catch (RuntimeException re) {
 			log.error(methodName, "save failed", re);
 			throw re;
 		} finally {
-			log.info(methodName, "fine");
+			log.trace(methodName, "fine");
 		}
 	}
 
@@ -75,9 +76,11 @@ public class JpaDao<E, PK> implements Dao<E, PK> {
 			throw new UnsupportedOperationException("problema creazione NamedQuery " + queryName, e);
 		}
 	}
+	
 	protected TypedQuery<E> createTypedNamedQuery(String queryName) {
 		return createTypedNamedQuery(queryName, entityClass);
 	}
+	
 	protected <T> TypedQuery<T> createTypedNamedQuery(String queryName, Class<T> clazz) {
 		try {
 			return entityManager.createNamedQuery(queryName, clazz);
@@ -85,13 +88,71 @@ public class JpaDao<E, PK> implements Dao<E, PK> {
 			throw new UnsupportedOperationException("problema creazione NamedQuery " + queryName, e);
 		}
 	}
+	
+	@Override
+	public List<E> findAllValid(Integer enteProprietarioId) {
+		StringBuilder sb = new StringBuilder()
+				.append("FROM ").append(entityClass.getName()).append(" as entity ")
+				.append(" WHERE entity.siacTEnteProprietario.enteProprietarioId = :enteProprietarioId ")
+				.append(getDateValiditaCancellazioneClauses("entity"));
 
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		params.put("enteProprietarioId", enteProprietarioId);
+		
+		TypedQuery<E> typedQuery = createTypedQuery(sb.toString(), params);
+		
+		return typedQuery.getResultList();
+	}
+	
+	@Override
+	public E findByCode(String codeFieldName, String codeFieldValue, Integer enteProprietarioId) {
+		StringBuilder sb = new StringBuilder()
+				.append("FROM ")
+				.append(entityClass.getName()).append(" as entity")
+				.append(" WHERE ")
+				.append(codeFieldName)
+				.append(" = :" + codeFieldName)
+				.append(getDateValiditaCancellazioneClauses("entity"))
+				.append(" AND siacTEnteProprietario.enteProprietarioId = :enteProprietarioId");
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		params.put(codeFieldName, codeFieldValue);
+		params.put("enteProprietarioId", enteProprietarioId);
+		
+		TypedQuery<E> typedQuery = createTypedQuery(sb.toString(), params);
+		
+		return typedQuery.getSingleResult();
+	}		
+
+	
+	@Override
+	public E findByCode(String codeFieldName, String codeFieldValue) {
+		
+		StringBuilder sb = new StringBuilder()
+				.append("FROM ")
+				.append(entityClass.getName()).append(" as entity")
+				.append(" WHERE ")
+				.append(codeFieldName)
+				.append(" = :" + codeFieldName)
+				.append(getDateValiditaCancellazioneClauses("entity"));
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		params.put(codeFieldName, codeFieldValue);
+		
+		TypedQuery<E> typedQuery = createTypedQuery(sb.toString(), params);
+		
+		return typedQuery.getSingleResult();
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<E> findAll(int... rowStartIdxAndCount) {
 		final String methodName = "[findAll] - ";
 		try {
-			log.info(methodName, "inizio");
+			log.trace(methodName, "inizio");
 			Query query = createNamedQuery(listAllQueryName);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
@@ -111,7 +172,7 @@ public class JpaDao<E, PK> implements Dao<E, PK> {
 			log.error(methodName, "findAll failed", re);
 			throw re;
 		} finally {
-			log.info(methodName, "fine");
+			log.trace(methodName, "fine");
 		}
 	}
 
@@ -119,13 +180,13 @@ public class JpaDao<E, PK> implements Dao<E, PK> {
 	public E findById(PK id) {
 		final String methodName = "[findById] - ";
 		try {
-			log.info(methodName, "inizio");
+			log.trace(methodName, "inizio");
 			return entityManager.find(entityClass, id);
 		} catch (RuntimeException re) {
 			log.error(methodName, "findById failed", re);
 			throw re;
 		} finally {
-			log.info(methodName, "fine");
+			log.trace(methodName, "fine");
 		}
 	}
 
@@ -133,14 +194,14 @@ public class JpaDao<E, PK> implements Dao<E, PK> {
 	public void delete(E entity) {
 		final String methodName = "[delete] - ";
 		try {
-			log.info(methodName, "inizio");
+			log.trace(methodName, "inizio");
 			entityManager.remove(entity);
-			log.info(methodName, "delete successful");
+			log.trace(methodName, "delete successful");
 		} catch (RuntimeException re) {
 			log.error(methodName, "delete failed", re);
 			throw re;
 		} finally {
-			log.info(methodName, "fine");
+			log.trace(methodName, "fine");
 		}
 	}
 	
@@ -148,15 +209,15 @@ public class JpaDao<E, PK> implements Dao<E, PK> {
 	public E create(E entity){
 		final String methodName = "[create] - ";
 		try {
-			log.info(methodName, "inizio");
+			log.trace(methodName, "inizio");
 			entityManager.persist(entity);
-			log.info(methodName, "create successful");
+			log.trace(methodName, "create successful");
 			return entity;
 		} catch (RuntimeException re) {
 			log.error(methodName, "create failed", re);
 			throw re;
 		} finally {
-			log.info(methodName, "fine");
+			log.trace(methodName, "fine");
 		}
 	}	
 	
@@ -164,15 +225,15 @@ public class JpaDao<E, PK> implements Dao<E, PK> {
 	public E update(E entity) {
 		final String methodName = "[update] - ";
 		try {
-			log.info(methodName, "inizio");
+			log.trace(methodName, "inizio");
 			E result = entityManager.merge(entity);
-			log.info(methodName, "update successful");
+			log.trace(methodName, "update successful");
 			return result;
 		} catch (RuntimeException re) {
 			log.error(methodName, "update failed", re);
 			throw re;
 		} finally {
-			log.info(methodName, "fine");
+			log.trace(methodName, "fine");
 		}
 	}
 
@@ -321,6 +382,27 @@ public class JpaDao<E, PK> implements Dao<E, PK> {
 		entityManager.flush();
 	}
 	
+	protected String getEnteClause(String tabAlias) {
+		return new StringBuilder()
+				.append(" AND ").append(tabAlias).append(".").append("siacTEnteProprietario.enteProprietarioId = :enteProprietarioId ").toString();
+	}
+	protected String getDateValiditaCancellazioneClauses(String tabAlias) {
+		return getInternalDateValiditaCancellazioneClauses(tabAlias, "dataCancellazione", "dataInizioValidita", "dataFineValidita");
+	}
+	
+	protected String getDateValiditaCancellazioneClausesForNativeQuery(String tabAlias) {
+		return getInternalDateValiditaCancellazioneClauses(tabAlias, "data_cancellazione", "validita_inizio", "validita_fine");
+	}
+	
+	private String getInternalDateValiditaCancellazioneClauses(String tabAlias, String dataCancellazioneFldName, String validitaInizioFldName, String validitaFineFldName) {
+		
+		return new StringBuilder()
+				.append(" AND ").append(tabAlias).append(".").append(dataCancellazioneFldName).append(" IS NULL ")
+				.append(" AND ").append(tabAlias).append(".").append(validitaInizioFldName).append(" <= CURRENT_TIMESTAMP ")
+				.append(" AND (").append(tabAlias).append(".").append(validitaFineFldName).append(" IS NULL OR ")
+								 .append(tabAlias).append(".").append(validitaFineFldName).append(" > CURRENT_TIMESTAMP)")
+				.toString();
+	}
 	
 	protected String getSiacTClassDataValiditaSql(String tabAlias, String annoParam) {
 		
@@ -335,4 +417,11 @@ public class JpaDao<E, PK> implements Dao<E, PK> {
 				
 			.toString();
 	}
+
+	@Override
+	public E logicalDelete(E entity) {
+		// TODO Auto-generated method stub
+		return update(entity);
+	}
+
 }
